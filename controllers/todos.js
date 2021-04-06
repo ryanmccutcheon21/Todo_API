@@ -1,5 +1,6 @@
 const
-    db = require('../models');
+    db = require('../models')
+Todo = require('../models/todo');
 
 
 exports.getTodos = (req, res) => {
