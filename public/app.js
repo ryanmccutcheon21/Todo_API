@@ -1,5 +1,3 @@
-const { createTodo } = require("../controllers/todos")
-
 $(document).ready(() => {
     $.getJSON("/api/todos")
         .then(addTodos)
@@ -11,6 +9,9 @@ $(document).ready(() => {
             createTodo();
         }
     })
+    $('.list').on('click', 'span', () => {
+        removeTodo($(this).parent())
+    })
 })
 
 const addTodos = todos => {
@@ -21,7 +22,8 @@ const addTodos = todos => {
 }
 
 const addTodo = todo => {
-    const newTodo = $('<li class="task">' + todo.name + '</li>')
+    const newTodo = $('<li class="task">' + todo.name + '<span>X</span></li>')
+    newTodo.data('id', todo._id)
     if (todo.completed) {
         newTodo.addClass('done')
     }
@@ -35,6 +37,21 @@ const createTodo = () => {
         .then(newTodo => {
             $('#todoInput').val('')
             addTodo(newTodo)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+}
+
+const removeTodo = () => {
+    const clickedId = todo.data('id')
+    const deleteUrl = '/api/todos/' + clickedId
+    $.ajax({
+        method: 'DELETE',
+        url: deleteUrl
+    })
+        .then(data => {
+            todo.remove()
         })
         .catch(err => {
             console.log(err)
